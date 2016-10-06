@@ -6,11 +6,11 @@ Given a tree G. Given queries of the form (V1, V2), for each query you need to f
 
 ### The Idea of the Algorithm
 
-Before answering the queries, we need to do *preprocessing*. Run DFS from the root using preorder traversal and it will build an array Order which store the visit order of the vertices (current vertex is added to the list at the entrance to the vertex and after return from its child (children)). It is clear that the size of this list will be $O(N)$. We also need to build an array First[1..N] which stores the position of each vertex in the array such that Order[First[I]] = I. Also by using the DFS we can find the height of each node (distance from root to it) - H[1..N].
+Before answering the queries, we need to do **preprocessing**. Run DFS from the root using preorder traversal and it will build an array Order which store the visit order of the vertices (current vertex is added to the list at the entrance to the vertex and after return from its child (children)). It is clear that the size of this list will be O(N). We also need to build an array First[1..N] which stores the position of each vertex in the array such that Order[First[I]] = I. Also by using the DFS we can find the height of each node (distance from root to it) - H[1..N].
 
 So how to answer the queries? Suppose the query is a pair of V1 and V2. Consider the elements in Order between indices First[V1] and First[V2]. It is easy to notice that in this range there are LCA(V1, V2) and many other peaks. However the LCA(V1, V2) can be uniquely determined, that is, the vertex with the lowest height.
 
-Thus, to answer the query, we just need *to find the vertex with smallest height* in the array Order in the range from First[V1] to First[V2]. Thus, *the objective of finding LCA is reduced to the RMQ problem* (minimum in an interval problem).
+Thus, to answer the query, we just need **to find the vertex with smallest height** in the array Order in the range from First[V1] to First[V2]. Thus, **the objective of finding LCA is reduced to the RMQ problem** (minimum in an interval problem).
 
 If you use the sqrt-decomposition, it is possible to obtain a solution, answering each query in O(sqrt(N)) with preprocessing in O(N) time.
 
@@ -34,9 +34,9 @@ void lca_dfs (const graph & g, int v, int h = 1)
     lca_h[v] = h;
     lca_dfs_list.push_back (v);
     for (const_graph_iter i = g[v].begin(); i != g[v].end(); ++i)
-        if (!lca_dfs_used[*i])
+        if (!lca_dfs_used[**i])
         {
-            lca_dfs (g, *i, h+1);
+            lca_dfs (g, **i, h+1);
             lca_dfs_list.push_back (v);
         }
 }
@@ -61,13 +61,13 @@ void lca_prepare (const graph & g, int root)
 {
     int n = (int) g.size();
     lca_h.resize (n);
-    lca_dfs_list.reserve (n*2);
+    lca_dfs_list.reserve (n**2);
     lca_dfs_used.assign (n, 0);
 
     lca_dfs (g, root);
 
     int m = (int) lca_dfs_list.size();
-    lca_tree.assign (lca_dfs_list.size() * 4 + 1, -1);
+    lca_tree.assign (lca_dfs_list.size() ** 4 + 1, -1);
     lca_build_tree (1, 0, m-1);
 
     lca_first.assign (n, -1);
